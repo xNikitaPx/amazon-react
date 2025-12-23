@@ -1,6 +1,6 @@
 import { CartItem } from "./CartItem";
 
-function OrderSummary({ cart, deliveryOptions }) {
+function OrderSummary({ cart, deliveryOptions, loadCart }) {
   return (
     <div className="order-summary">
       {deliveryOptions.length > 0 &&
@@ -10,6 +10,7 @@ function OrderSummary({ cart, deliveryOptions }) {
               key={cartItem.productId}
               cartItem={cartItem}
               deliveryOptions={deliveryOptions}
+              loadCart={loadCart}
             />
           );
         })}

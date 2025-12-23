@@ -1,8 +1,16 @@
 import { Link } from "react-router";
+import axios from "axios";
 import dayjs from "dayjs";
 import BuyAgainIcon from "../../assets/images/icons/buy-again.png";
 
 function OrderProduct({ order, orderProduct }) {
+  const addToCart = async () => {
+    await axios.post("/api/cart-items", {
+      productId: orderProduct.product.id,
+      quantity: orderProduct.quantity,
+    });
+  };
+
   return (
     <>
       <div className="product-image-container">
@@ -20,7 +28,9 @@ function OrderProduct({ order, orderProduct }) {
         </div>
         <button className="buy-again-button button-primary">
           <img className="buy-again-icon" src={BuyAgainIcon} />
-          <span className="buy-again-message">Add to Cart</span>
+          <span className="buy-again-message" onClick={addToCart}>
+            Add to Cart
+          </span>
         </button>
       </div>
 
