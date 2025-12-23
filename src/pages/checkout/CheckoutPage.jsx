@@ -11,16 +11,21 @@ function CheckoutPage({ cart }) {
 
   useEffect(() => {
     const fetchCheckoutData = async () => {
-      const responseOptions = await axios.get(
+      const response = await axios.get(
         "/api/delivery-options?expand=estimatedDeliveryTime"
       );
-      setDeliveryOptions(responseOptions.data);
-
-      const responsePayment = await axios.get("/api/payment-summary");
-      setPaymentSummary(responsePayment.data);
+      setDeliveryOptions(response.data);
     };
     fetchCheckoutData();
   }, []);
+
+  useEffect(() => {
+    const fetchCheckoutData = async () => {
+      const response = await axios.get("/api/payment-summary");
+      setPaymentSummary(response.data);
+    };
+    fetchCheckoutData();
+  }, [cart]);
 
   return (
     <>

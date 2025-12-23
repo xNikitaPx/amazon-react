@@ -3,7 +3,7 @@ import { useState } from "react";
 import { formatMoney } from "../../utils/money";
 import CheckmarkIcon from "../../assets/images/icons/checkmark.png";
 
-function Product({ product, loadCart }) {
+function Product({ product }) {
   const [quantity, setQuantity] = useState(1);
 
   const addToCart = async () => {
@@ -11,7 +11,6 @@ function Product({ product, loadCart }) {
       productId: product.id,
       quantity,
     });
-    await loadCart();
   };
 
   const selectQuantity = (event) => {
