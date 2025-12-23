@@ -4,7 +4,8 @@ import Logo from "../../assets/images/logo.png";
 import MobileLogo from "../../assets/images/mobile-logo.png";
 import CheckoutLockIcon from "../../assets/images/icons/checkout-lock-icon.png";
 
-function CheckoutHeader() {
+function CheckoutHeader({ cart }) {
+  const totalQuantity = cart.reduce((sum, item) => (sum += item.quantity), 0);
   return (
     <div className="checkout-header">
       <div className="header-content">
@@ -18,7 +19,7 @@ function CheckoutHeader() {
         <div className="checkout-header-middle-section">
           Checkout (
           <NavLink className="return-to-home-link" to="/">
-            3 items
+            {totalQuantity} items
           </NavLink>
           )
         </div>
