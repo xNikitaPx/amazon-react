@@ -1,12 +1,25 @@
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { formatMoney } from "../../utils//money";
+import { addOrder } from "../../utils/order";
 
-function PaymentSummary({ paymentSummary }) {
+function PaymentSummary({ paymentSummary, cart, setCart }) {
   const navigate = useNavigate();
 
   const createOrder = async () => {
-    await axios.post("/api/orders");
+    const response = await axios.post(
+      "https://supersimplebackend.dev/orders",
+      { cart: cart },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const order = response.data;
+    addOrder(order);
+    setCart([]);
     navigate("/orders");
   };
 

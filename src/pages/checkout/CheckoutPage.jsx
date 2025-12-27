@@ -1,31 +1,57 @@
-import axios from "axios";
 import { CheckoutHeader } from "./CheckoutHeader";
 import { OrderSummary } from "./OrderSummary";
 import { PaymentSummary } from "./PaymentSummary";
-import { useEffect, useState } from "react";
 import "./CheckoutPage.css";
 
-function CheckoutPage({ cart, loadCart }) {
-  const [deliveryOptions, setDeliveryOptions] = useState([]);
-  const [paymentSummary, setPaymentSummary] = useState(null);
+function CheckoutPage({ cart, products, setCart }) {
+  const deliveryOptions = [
+    {
+      id: "1",
+      deliveryDays: 7,
+      priceCents: 0,
+    },
+    {
+      id: "2",
+      deliveryDays: 3,
+      priceCents: 499,
+    },
+    {
+      id: "3",
+      deliveryDays: 1,
+      priceCents: 999,
+    },
+  ];
 
-  useEffect(() => {
-    const fetchCheckoutData = async () => {
-      const response = await axios.get(
-        "/api/delivery-options?expand=estimatedDeliveryTime"
-      );
-      setDeliveryOptions(response.data);
-    };
-    fetchCheckoutData();
-  }, []);
+  let productCostCents = 0;
+  let shippingCostCents = 0;
 
-  useEffect(() => {
-    const fetchCheckoutData = async () => {
-      const response = await axios.get("/api/payment-summary");
-      setPaymentSummary(response.data);
-    };
-    fetchCheckoutData();
-  }, [cart]);
+  cart.forEach((cartItem) => {
+    const matchingProduct = products.find(
+      (product) => product.id === cartItem.productId
+    );
+
+    const deliveryOption =
+      deliveryOptions.find(
+        (option) => option.id === cartItem.deliveryOptionId
+      ) || deliveryOptions[0];
+
+    if (!matchingProduct) return null;
+
+    productCostCents += matchingProduct.priceCents * cartItem.quantity;
+    shippingCostCents += deliveryOption.priceCents;
+  });
+
+  const totalCostBeforeTaxCents = productCostCents + shippingCostCents;
+  const taxCents = (totalCostBeforeTaxCents * 10) / 100;
+  const totalCostCents = totalCostBeforeTaxCents + taxCents;
+
+  const paymentSummary = {
+    productCostCents,
+    shippingCostCents,
+    totalCostBeforeTaxCents,
+    taxCents,
+    totalCostCents,
+  };
 
   return (
     <>
@@ -38,9 +64,14 @@ function CheckoutPage({ cart, loadCart }) {
           <OrderSummary
             cart={cart}
             deliveryOptions={deliveryOptions}
-            loadCart={loadCart}
+            products={products}
+            setCart={setCart}
           />
-          <PaymentSummary paymentSummary={paymentSummary} />
+          <PaymentSummary
+            paymentSummary={paymentSummary}
+            cart={cart}
+            setCart={setCart}
+          />
         </div>
       </div>
     </>

@@ -1,22 +1,27 @@
-import axios from "axios";
 import { formatMoney } from "../../utils//money";
 import { useState } from "react";
 
-function CartItemDetails({ cartItem, loadCart }) {
+function CartItemDetails({ cartItem, products, cart, setCart }) {
   const [isUpdatingQuantity, setIsUpdatingQuantity] = useState(false);
   const [quantity, setQuantity] = useState(cartItem.quantity);
 
-  const deleteCartItem = async () => {
-    await axios.delete(`/api/cart-items/${cartItem.productId}`);
-    await loadCart();
+  const matchingItem = products.find(
+    (product) => product.id === cartItem.productId
+  );
+
+  const deleteCartItem = () => {
+    setCart(cart.filter((item) => cartItem.productId !== item.productId));
   };
 
-  const updatedQuantity = async () => {
+  const updatedQuantity = () => {
     if (isUpdatingQuantity) {
-      await axios.put(`/api/cart-items/${cartItem.productId}`, {
-        quantity: +quantity,
-      });
-      await loadCart();
+      setCart(
+        cart.map((item) =>
+          item.productId === cartItem.productId
+            ? { ...item, quantity: +quantity }
+            : item
+        )
+      );
       setIsUpdatingQuantity(false);
     } else {
       setIsUpdatingQuantity(true);
@@ -38,14 +43,16 @@ function CartItemDetails({ cartItem, loadCart }) {
     }
   };
 
+  if (!matchingItem) return null;
+
   return (
     <>
-      <img className="product-image" src={cartItem.product.image} />
+      <img className="product-image" src={matchingItem.image} />
 
       <div className="cart-item-details">
-        <div className="product-name">{cartItem.product.name}</div>
+        <div className="product-name">{matchingItem.name}</div>
         <div className="product-price">
-          {formatMoney(cartItem.product.priceCents)}
+          {formatMoney(matchingItem.priceCents)}
         </div>
         <div className="product-quantity">
           <span>

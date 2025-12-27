@@ -2,16 +2,21 @@ import { DeliveryDate } from "./DeliveryDate";
 import { CartItemDetails } from "./CartItemDetails";
 import { DeliveryOptions } from "./DeliveryOptions";
 
-function CartItem({ cartItem, deliveryOptions, loadCart }) {
+function CartItem({ cartItem, deliveryOptions, products, cart, setCart }) {
   return (
     <div className="cart-item-container">
       <DeliveryDate deliveryOptions={deliveryOptions} cartItem={cartItem} />
       <div className="cart-item-details-grid">
-        <CartItemDetails cartItem={cartItem} loadCart={loadCart} />
+        <CartItemDetails
+          cartItem={cartItem}
+          products={products}
+          cart={cart}
+          setCart={setCart}
+        />
         <DeliveryOptions
           deliveryOptions={deliveryOptions}
           cartItem={cartItem}
-          loadCart={loadCart}
+          setCart={setCart}
         />
       </div>
     </div>

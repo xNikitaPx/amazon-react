@@ -1,26 +1,18 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
-
 import "./HomePage.css";
 
-function HomePage({ cart, loadCart }) {
-  const [products, setProducts] = useState([]);
+function HomePage({ cart, addToCart, products }) {
   const [searchParams] = useSearchParams();
-  const search = searchParams.get("search");
+  const search = searchParams.get("search") || "";
 
-  useEffect(() => {
-    const getHomeData = async () => {
-      const urlPath = search
-        ? `/api/products?search=${search}`
-        : "/api/products";
-      const response = await axios.get(urlPath);
-      setProducts(response.data);
-    };
-    getHomeData();
-  }, [search]);
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [products, search]);
 
   return (
     <>
@@ -28,7 +20,7 @@ function HomePage({ cart, loadCart }) {
       <link rel="icon" type="image/svg+xml" href="home-favicon.png" />
       <Header cart={cart} />
       <div className="home-page">
-        <ProductsGrid products={products} loadCart={loadCart} />
+        <ProductsGrid products={filteredProducts} addToCart={addToCart} />
       </div>
     </>
   );

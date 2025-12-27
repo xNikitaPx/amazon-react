@@ -1,22 +1,21 @@
-import axios from "axios";
 import { useState } from "react";
 import { formatMoney } from "../../utils/money";
 import CheckmarkIcon from "../../assets/images/icons/checkmark.png";
 
-function Product({ product, loadCart }) {
+function Product({ product, addToCart }) {
   const [quantity, setQuantity] = useState(1);
   const [showAddedMessage, setShowAddedMessage] = useState(false);
 
-  const addToCart = async () => {
-    await axios.post("/api/cart-items", {
-      productId: product.id,
-      quantity,
-    });
-    await loadCart();
+  const showMessage = async () => {
     setShowAddedMessage(true);
     setTimeout(() => {
       setShowAddedMessage(false);
     }, 2000);
+  };
+
+  const onAddToCard = () => {
+    addToCart(product.id, quantity);
+    showMessage();
   };
 
   const selectQuantity = (event) => {
@@ -77,7 +76,7 @@ function Product({ product, loadCart }) {
       <button
         className="add-to-cart-button button-primary"
         data-testid="add-to-cart-button"
-        onClick={addToCart}
+        onClick={onAddToCard}
       >
         Add to Cart
       </button>

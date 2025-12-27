@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
-import axios from "axios";
 import { formatMoney } from "../../utils//money";
 
-function DeliveryOptions({ deliveryOptions, cartItem, loadCart }) {
+function DeliveryOptions({ deliveryOptions, setCart, cartItem }) {
   return (
     <div className="delivery-options">
       <div className="delivery-options-title">Choose a delivery option:</div>
@@ -13,12 +12,22 @@ function DeliveryOptions({ deliveryOptions, cartItem, loadCart }) {
           priceString = `${formatMoney(deliveryOption.priceCents)} - Shipping`;
         }
 
-        const updateDeliveryOptions = async () => {
-          await axios.put(`/api/cart-items/${cartItem.productId}`, {
-            deliveryOptionId: deliveryOption.id,
-          });
-          await loadCart();
+        const updateDeliveryOptions = () => {
+          setCart((prevCart) =>
+            prevCart.map((item) =>
+              item.productId === cartItem.productId
+                ? { ...item, deliveryOptionId: deliveryOption.id }
+                : item
+            )
+          );
         };
+
+        function calculateDeliveryDate(deliveryOption) {
+          const today = dayjs();
+          let deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+          const dateString = deliveryDate.format("dddd, MMMM D");
+          return dateString;
+        }
 
         return (
           <label key={deliveryOption.id} className="delivery-option">
@@ -31,9 +40,7 @@ function DeliveryOptions({ deliveryOptions, cartItem, loadCart }) {
             />
             <div>
               <div className="delivery-option-date">
-                {dayjs(deliveryOption.estimatedDeliveryTimeMs).format(
-                  "dddd, MMMM D"
-                )}
+                {calculateDeliveryDate(deliveryOption)}
               </div>
               <div className="delivery-option-price">{priceString}</div>
             </div>

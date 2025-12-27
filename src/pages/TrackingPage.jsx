@@ -1,37 +1,32 @@
 import { Link } from "react-router";
-import axios from "axios";
 import dayjs from "dayjs";
 import { Header } from "../components/Header";
 import { useParams } from "react-router";
 import "./TrackingPage.css";
-import { useEffect, useState } from "react";
+import { orders } from "../utils/order";
 
-function TrackingPage({ cart }) {
+function TrackingPage({ cart, products }) {
   const { orderId, productId } = useParams();
-  const [order, setOrder] = useState(null);
+  const order = orders.find((order) => order.id === orderId);
 
-  useEffect(() => {
-    const fetchTrackingData = async () => {
-      const response = await axios.get(`api/orders/${orderId}?expand=products`);
-      setOrder(response.data);
-    };
-    fetchTrackingData();
-  }, [orderId]);
+  const product = products.find((product) => product.id === productId);
 
-  if (!order) return null;
+  if (!product) return null;
 
   const orderProduct = order.products.find(
-    (product) => product.productId === productId
+    (details) => details.productId === product.id
   );
 
   const totalDeliveryTimeMs =
-    orderProduct.estimatedDeliveryTimeMs - order.orderTimeMs;
-  const timePassedMs = dayjs().valueOf() - order.orderTimeMs;
+    dayjs(orderProduct.estimatedDeliveryTime) - dayjs(order.orderTime);
+  const timePassedMs = dayjs().valueOf() - dayjs(order.orderTime);
 
   let deliveryPercent = (timePassedMs / totalDeliveryTimeMs) * 100;
   if (deliveryPercent > 100) {
     deliveryPercent = 100;
   }
+
+  console.log(deliveryPercent);
 
   const isPreparing = deliveryPercent < 33;
   const isShipped = deliveryPercent >= 33 && deliveryPercent < 100;
@@ -50,14 +45,14 @@ function TrackingPage({ cart }) {
 
           <div className="delivery-date">
             {deliveryPercent >= 100 ? "Delivered on " : "Arriving on "}
-            {dayjs(orderProduct.estimatedDeliveryTimeMs).format("dddd, MMMM D")}
+            {dayjs(orderProduct.estimatedDeliveryTime).format("dddd, MMMM D")}
           </div>
 
-          <div className="product-info">{orderProduct.product.name}</div>
+          <div className="product-info">{product.name}</div>
 
           <div className="product-info">Quantity: {orderProduct.quantity}</div>
 
-          <img className="product-image" src={orderProduct.product.image} />
+          <img className="product-image" src={product.image} />
 
           <div className="progress-labels-container">
             <div
