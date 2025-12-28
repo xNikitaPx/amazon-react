@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatMoney } from "../../utils/money";
-import { getImageUrl } from "../../utils/money";
+import { getImageUrl } from "../../utils/getImageUrl";
 import CheckmarkIcon from "../../assets/images/icons/checkmark.png";
 
 function Product({ product, addToCart }) {
