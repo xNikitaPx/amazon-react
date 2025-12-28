@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import dayjs from "dayjs";
+import { getImageUrl } from "../../utils/getImageUrl";
 import BuyAgainIcon from "../../assets/images/icons/buy-again.png";
 import { useState } from "react";
 
@@ -26,7 +27,7 @@ function OrderProduct({ order, orderProduct, products, addToCart }) {
   return (
     <>
       <div className="product-image-container">
-        <img src={product.image} />
+        <img src={getImageUrl(product.image)} />
       </div>
 
       <div className="product-details">

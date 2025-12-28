@@ -4,6 +4,7 @@ import { Header } from "../components/Header";
 import { useParams } from "react-router";
 import "./TrackingPage.css";
 import { orders } from "../utils/order";
+import { getImageUrl } from "../utils/getImageUrl";
 
 function TrackingPage({ cart, products }) {
   const { orderId, productId } = useParams();
@@ -52,7 +53,7 @@ function TrackingPage({ cart, products }) {
 
           <div className="product-info">Quantity: {orderProduct.quantity}</div>
 
-          <img className="product-image" src={product.image} />
+          <img className="product-image" src={getImageUrl(product.image)} />
 
           <div className="progress-labels-container">
             <div
