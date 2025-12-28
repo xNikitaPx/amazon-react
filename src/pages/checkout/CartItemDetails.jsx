@@ -1,5 +1,6 @@
 import { formatMoney } from "../../utils//money";
 import { useState } from "react";
+import { getImageUrl } from "../../utils/getImageUrl";
 
 function CartItemDetails({ cartItem, products, cart, setCart }) {
   const [isUpdatingQuantity, setIsUpdatingQuantity] = useState(false);
@@ -47,7 +48,7 @@ function CartItemDetails({ cartItem, products, cart, setCart }) {
 
   return (
     <>
-      <img className="product-image" src={matchingItem.image} />
+      <img className="product-image" src={getImageUrl(matchingItem.image)} />
 
       <div className="cart-item-details">
         <div className="product-name">{matchingItem.name}</div>

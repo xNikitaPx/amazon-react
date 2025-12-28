@@ -1,4 +1,4 @@
-const orders = JSON.parse(localStorage.getItem("orders")) || [];
+const orders = JSON.parse(localStorage.getItem("orders-react")) || [];
 
 function addOrder(order) {
   orders.unshift(order);
@@ -6,7 +6,7 @@ function addOrder(order) {
 }
 
 function saveToStorage() {
-  localStorage.setItem("orders", JSON.stringify(orders));
+  localStorage.setItem("orders-react", JSON.stringify(orders));
 }
 
 function getOrder(orderId) {
