@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { formatMoney } from "../../utils/money";
+import { getImageUrl } from "../../utils/money";
 import CheckmarkIcon from "../../assets/images/icons/checkmark.png";
 
 function Product({ product, addToCart }) {
@@ -29,7 +30,7 @@ function Product({ product, addToCart }) {
         <img
           className="product-image"
           data-testid="product-image"
-          src={product.image}
+          src={getImageUrl(product.image)}
         />
       </div>
 
